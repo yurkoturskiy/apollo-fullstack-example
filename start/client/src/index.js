@@ -9,13 +9,19 @@ import Pages from "./pages";
 import injectStyles from "./styles";
 
 const cache = new InMemoryCache();
-const link = new HttpLink({
-  uri: "http://localhost:4000/"
-});
-
 const client = new ApolloClient({
   cache,
-  link
+  link: new HttpLink({
+    headers: { authorization: localStorage.getItem("token") },
+    uri: "http://localhost:4000/graphql"
+  })
+});
+
+cache.writeData({
+  data: {
+    isLoggedIn: !!localStorage.getItem("token"),
+    cartItems: []
+  }
 });
 
 // ... above is the instantiation of the client object.
